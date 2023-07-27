@@ -11,11 +11,13 @@ def main():
     # If WEBSITE_HOSTNAME is defined as an environment variable, then we're running on Azure App Service
 
     # Only for Local Development - Load environment variables from the .env file
-    if 'WEBSITE_HOSTNAME' not in os.environ:
-        load_dotenv('./.env')
+    if "WEBSITE_HOSTNAME" not in os.environ:
+        load_dotenv("./.env")
 
-    settings_module = "app.production" if 'WEBSITE_HOSTNAME' in os.environ else 'app.settings'
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', settings_module)
+    settings_module = (
+        "app.production" if "WEBSITE_HOSTNAME" in os.environ else "app.settings"
+    )
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", settings_module)
 
     try:
         from django.core.management import execute_from_command_line
@@ -28,5 +30,5 @@ def main():
     execute_from_command_line(sys.argv)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
