@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-o#l%po=@7zk!&90ip8^lr93r&b2z=q#8-g#wkba9rwlbyzkv5_"
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -75,11 +76,11 @@ WSGI_APPLICATION = "app.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mydatabase',  # Replace with your desired database name
-        'USER': 'myuser',      # Replace with your desired database username
-        'PASSWORD': 'mypassword',  # Replace with your desired database password
-        'HOST': 'db',  # This will be the name of the PostgreSQL service in the Docker Compose file
-        'PORT': '5432',  # Default PostgreSQL port
+        'NAME': os.getenv('DBNAME'),
+        'USER': os.getenv('DBUSER'),
+        'PASSWORD': os.getenv('DBPASS'),
+        'HOST': os.getenv('DBHOST'),
+        'PORT': '5432',
     }
 }
 # Password validation
