@@ -13,7 +13,7 @@ ALLOWED_HOSTS = (
 CSRF_TRUSTED_ORIGINS = (
     ["https://" + os.environ["WEBSITE_HOSTNAME"]]
     if "WEBSITE_HOSTNAME" in os.environ
-    else []
+    else ["parkinguy.azurewebsites.net"]
 )
 DEBUG = True
 
