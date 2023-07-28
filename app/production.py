@@ -16,6 +16,7 @@ CSRF_TRUSTED_ORIGINS = (
     else ["parkinguy.azurewebsites.net"]
 )
 DEBUG = True
+SECRET_KEY = os.getenv("SECRET_KEY", "X2dDDD")
 
 # WhiteNoise configuration
 MIDDLEWARE = [
