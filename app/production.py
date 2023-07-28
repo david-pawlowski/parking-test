@@ -8,6 +8,8 @@ ALLOWED_HOSTS = (
     if "WEBSITE_HOSTNAME" in os.environ
     else []
 )
+print("XD")
+print(os.environ["WEBSITE_HOSTNAME"])
 CSRF_TRUSTED_ORIGINS = (
     ["https://" + os.environ["WEBSITE_HOSTNAME"]]
     if "WEBSITE_HOSTNAME" in os.environ
