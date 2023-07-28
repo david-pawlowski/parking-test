@@ -3,25 +3,21 @@ import os
 from .settings import *  # noqa
 from .settings import BASE_DIR
 
-# Configure the domain name using the environment variable
-# that Azure automatically creates for us.
 ALLOWED_HOSTS = (
     [os.environ["WEBSITE_HOSTNAME"]]
     if "WEBSITE_HOSTNAME" in os.environ
-    else ["parkinguy.azurewebsites.net"]
+    else []
 )
 CSRF_TRUSTED_ORIGINS = (
     ["https://" + os.environ["WEBSITE_HOSTNAME"]]
     if "WEBSITE_HOSTNAME" in os.environ
-    else ["parkinguy.azurewebsites.net"]
+    else []
 )
-DEBUG = True
-SECRET_KEY = os.getenv("SECRET_KEY", "X2dDDD")
+DEBUG = False
+SECRET_KEY = os.getenv("SECRET_KEY")
 
-# WhiteNoise configuration
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    # Add whitenoise middleware after the security middleware
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
