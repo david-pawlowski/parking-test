@@ -7,9 +7,7 @@ INSTALLED_APPS += [
     "whitenoise.runserver_nostatic",
 ]
 ALLOWED_HOSTS = (
-    [os.environ["WEBSITE_HOSTNAME"]]
-    if "WEBSITE_HOSTNAME" in os.environ
-    else []
+    [os.environ["WEBSITE_HOSTNAME"]] if "WEBSITE_HOSTNAME" in os.environ else []
 )
 CSRF_TRUSTED_ORIGINS = (
     ["https://" + os.environ["WEBSITE_HOSTNAME"]]
@@ -31,7 +29,9 @@ MIDDLEWARE = [
 ]
 
 STATIC_URL = os.environ.get("DJANGO_STATIC_URL", "/static/")
-STATIC_ROOT = os.environ.get("DJANGO_STATIC_ROOT", os.path.join(BASE_DIR, "staticfiles"))  
+STATIC_ROOT = os.environ.get(
+    "DJANGO_STATIC_ROOT", os.path.join(BASE_DIR, "staticfiles")
+)
 
 
 # Configure Postgres database based on connection string of the libpq Keyword/Value form
