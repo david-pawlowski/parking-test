@@ -3,6 +3,9 @@ import os
 from .settings import *  # noqa
 from .settings import BASE_DIR
 
+INSTALLED_APPS += [
+    "whitenoise.runserver_nostatic",
+]
 ALLOWED_HOSTS = (
     [os.environ["WEBSITE_HOSTNAME"]]
     if "WEBSITE_HOSTNAME" in os.environ

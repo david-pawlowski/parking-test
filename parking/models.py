@@ -5,8 +5,8 @@ from parking.sensors import get_parking_spot_status
 
 class ParkingModel(models.Model):
     name = models.CharField(max_length=64)
-    latitude = models.DecimalField(decimal_places=8, max_digits=180)
-    longitude = models.DecimalField(decimal_places=8, max_digits=180)
+    latitude = models.DecimalField(decimal_places=2, max_digits=5)
+    longitude = models.DecimalField(decimal_places=2, max_digits=5)
     capacity = models.IntegerField()
 
     def __str__(self) -> str:
