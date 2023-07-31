@@ -14,11 +14,12 @@ class ParkingModel(models.Model):
         return f"Parking {self.name} with {self.capacity} slots."
 
 
-class ParkingSpot(models.Model):
+class ParkingSpotModel(models.Model):
     number = models.CharField(max_length=32)
     parking = models.ForeignKey(ParkingModel, on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     occupied = models.BooleanField(default=False)
+    # Reservable in a way the owned want it to be reserved
     is_reservable = models.BooleanField(default=False)
     # join reservations
     # cost
@@ -29,10 +30,9 @@ class ParkingSpot(models.Model):
     def status(self):
         return get_parking_spot_status(self.number)
 
-    
-class Reservation(models.Model):
+
+class ReservationModel(models.Model):
     reserved_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    parking_spot = models.ForeignKey(ParkingSpot, on_delete=models.CASCADE)
+    parking_spot = models.ForeignKey(ParkingSpotModel, on_delete=models.CASCADE)
     started_at = models.DateTimeField(auto_now=True)
     valid_until = models.DateTimeField()
-    
