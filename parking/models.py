@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 from parking.sensors import get_parking_spot_status
 
@@ -16,7 +17,7 @@ class ParkingModel(models.Model):
 class ParkingSpot(models.Model):
     number = models.CharField(max_length=32)
     parking = models.ForeignKey(ParkingModel, on_delete=models.CASCADE)
-    owner = models.CharField(max_length=16)  # Charfield for now
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     occupied = models.BooleanField(default=False)
     is_reservable = models.BooleanField(default=False)
     # join reservations
@@ -27,3 +28,11 @@ class ParkingSpot(models.Model):
     @property
     def status(self):
         return get_parking_spot_status(self.number)
+
+    
+class Reservation(models.Model):
+    reserved_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    parking_spot = models.ForeignKey(ParkingSpot, on_delete=models.CASCADE)
+    started_at = models.DateTimeField(auto_now=True)
+    valid_until = models.DateTimeField()
+    
