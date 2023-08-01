@@ -18,3 +18,8 @@ settings_module = (
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", settings_module)
 
 application = get_wsgi_application()
+
+if "WEBSITE_HOSTNAME" not in os.environ:
+    import debugpy
+    debugpy.listen(("0.0.0.0", 5678))
+    debugpy.wait_for_client()

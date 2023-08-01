@@ -5,4 +5,3 @@ from .models import ParkingModel, ParkingSpotModel, ReservationModel
 admin.site.register(ParkingModel)
 admin.site.register(ParkingSpotModel)
 admin.site.register(ReservationModel)
-
