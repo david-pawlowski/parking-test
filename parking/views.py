@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User, Group
-from parking.models import ParkingModel
+from parking.models import ParkingModel, ParkingSpotModel, ReservationModel
 from rest_framework import viewsets
 from rest_framework import permissions
-from parking.serializers import UserSerializer, GroupSerializer, ParkingSerializer
+from parking.serializers import UserSerializer, GroupSerializer, ParkingSerializer, ParkingSpotSerializer, ReservationSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -28,4 +28,16 @@ class GroupViewSet(viewsets.ModelViewSet):
 class ParkingViewSet(viewsets.ModelViewSet):
     queryset = ParkingModel.objects.all()
     serializer_class = ParkingSerializer
+    permission_classess = []
+
+
+class ParkingSpotViewSet(viewsets.ModelViewSet):
+    queryset = ParkingSpotModel.objects.all()
+    serializer_class = ParkingSpotSerializer
+    permission_classess = []
+
+
+class ReservationViewSet(viewsets.ModelViewSet):
+    queryset = ReservationModel.objects.all()
+    serializer_class = ReservationSerializer
     permission_classess = []
