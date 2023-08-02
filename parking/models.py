@@ -30,7 +30,17 @@ class ParkingSpotModel(models.Model):
     def status(self):
         return get_parking_spot_status(self.number)
 
+    def reserve(self):
+        self.occupied = True
+        self.save()
+        # here we should make task to watch time until end of reservation. subscription
 
+    def free_up(self):
+        self.occupied = False
+        self.save()
+        # Delete task which is watching time
+
+    
 class ReservationModel(models.Model):
     reserved_by = models.ForeignKey(User, on_delete=models.CASCADE)
     parking_spot = models.ForeignKey(ParkingSpotModel, on_delete=models.CASCADE)
