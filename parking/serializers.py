@@ -21,7 +21,7 @@ class ParkingSerializer(serializers.HyperlinkedModelSerializer):
 class AvailabilitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = AvailabilityModel
-        fields = ['available_from', 'available_to', 'cost_per_hour', 'parking_spot']
+        fields = ["available_from", "available_to", "cost_per_hour", "parking_spot"]
 
 
 class ParkingSpotSerializer(serializers.HyperlinkedModelSerializer):
@@ -38,12 +38,14 @@ class ReservationSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["reserved_by", "parking_spot", "started_at", "valid_until"]
 
     def validate(self, attrs):
-        parking_spot = attrs['parking_spot']
-        valid_until = attrs['valid_until']
+        parking_spot = attrs["parking_spot"]
+        valid_until = attrs["valid_until"]
         if parking_spot.is_available(valid_until):
             return super().validate(attrs)
-        raise ValidationError("Parking spot is not available for rent in provided time frame.")
-    
+        raise ValidationError(
+            "Parking spot is not available for rent in provided time frame."
+        )
+
     def validate_parking_spot(self, parking_spot):
         if parking_spot.occupied:
             raise ValidationError("Parking spot is currently occupied.")
