@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from parking.sensors import get_parking_spot_status
 from accounts.models import User
@@ -18,16 +19,22 @@ class ParkingSpotModel(models.Model):
     parking = models.ForeignKey(ParkingModel, on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     occupied = models.BooleanField(default=False)
-    # Reservable in a way the owned want it to be reserved
-    is_reservable = models.BooleanField(default=False)
-    # join reservations
-    # cost
     # exact place lat, long???
     # photo maybe
+
+    def __str__(self) -> str:
+        return f"Spot {self.number} on {self.parking.name} currently {'not' if not self.occupied else ''} occupied"
 
     @property
     def status(self):
         return get_parking_spot_status(self.number)
+    
+    def is_available(self, end_of_reservation):
+        now = timezone.now()
+        for availability in self.availability.all():
+            if availability.available_from < now and availability.available_to > end_of_reservation:
+                return True
+        return False
 
     def reserve(self):
         self.occupied = True
@@ -38,6 +45,13 @@ class ParkingSpotModel(models.Model):
         self.occupied = False
         self.save()
         # Delete task which is watching time
+
+
+class AvailabilityModel(models.Model):
+    parking_spot = models.ForeignKey(ParkingSpotModel, on_delete=models.CASCADE, related_name="availability")
+    available_from = models.DateTimeField()
+    available_to = models.DateTimeField()
+    cost_per_hour = models.DecimalField(decimal_places=2, max_digits=4)
 
     
 class ReservationModel(models.Model):
