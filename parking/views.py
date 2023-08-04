@@ -1,8 +1,8 @@
-from django.contrib.auth.models import User, Group
+from accounts.models import User
 from parking.models import ParkingModel, ParkingSpotModel, ReservationModel
 from rest_framework import viewsets
 from rest_framework import permissions
-from parking.serializers import UserSerializer, GroupSerializer, ParkingSerializer, ParkingSpotSerializer, ReservationSerializer
+from parking.serializers import UserSerializer, ParkingSerializer, ParkingSpotSerializer, ReservationSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -12,16 +12,6 @@ class UserViewSet(viewsets.ModelViewSet):
 
     queryset = User.objects.all().order_by("-date_joined")
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
