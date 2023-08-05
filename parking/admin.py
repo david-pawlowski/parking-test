@@ -1,5 +1,10 @@
 from django.contrib import admin
-from .models import ParkingModel, ParkingSpotModel, ReservationModel, AvailabilityModel
+from .models import (
+    ParkingModel,
+    ParkingSpotModel,
+    ReservationModel,
+    AvailabilityModel,
+)
 
 # Register your models here.
 admin.site.register(ParkingModel)

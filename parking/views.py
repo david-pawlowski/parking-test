@@ -46,7 +46,8 @@ class ReservationViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         reservation = serializer.save()
         parking_spot = reservation.parking_spot
-        # Actually here we need to start cron job to check when reservation time ends
+        # Actually here we need to start cron job
+        # to check when reservation time ends
         # parking spot sensor data to determine if it is occupied
         # If it is start charging extra
         parking_spot.occupied = True

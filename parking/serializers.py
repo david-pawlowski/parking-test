@@ -1,8 +1,12 @@
 from django.forms import ValidationError
-from django.utils import timezone
 from rest_framework import serializers
 
-from .models import ParkingModel, ParkingSpotModel, ReservationModel, AvailabilityModel
+from .models import (
+    ParkingModel,
+    ParkingSpotModel,
+    ReservationModel,
+    AvailabilityModel,
+)
 from accounts.models import User
 
 
@@ -21,7 +25,12 @@ class ParkingSerializer(serializers.HyperlinkedModelSerializer):
 class AvailabilitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = AvailabilityModel
-        fields = ["available_from", "available_to", "cost_per_hour", "parking_spot"]
+        fields = [
+            "available_from",
+            "available_to",
+            "cost_per_hour",
+            "parking_spot",
+        ]
 
 
 class ParkingSpotSerializer(serializers.HyperlinkedModelSerializer):

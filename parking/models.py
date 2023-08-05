@@ -24,7 +24,8 @@ class ParkingSpotModel(models.Model):
     # photo maybe
 
     def __str__(self) -> str:
-        return f"Spot {self.number} on {self.parking.name} currently {'not' if not self.occupied else ''} occupied"
+        return f"Spot {self.number} on {self.parking.name} \
+            currently {'not' if not self.occupied else ''} occupied"
 
     @property
     def status(self):
@@ -43,7 +44,8 @@ class ParkingSpotModel(models.Model):
     def reserve(self):
         self.occupied = True
         self.save()
-        # here we should make task to watch time until end of reservation. subscription
+        # here we should make task to watch
+        # time until end of reservation. subscription
 
     def free_up(self):
         self.occupied = False
@@ -62,6 +64,8 @@ class AvailabilityModel(models.Model):
 
 class ReservationModel(models.Model):
     reserved_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    parking_spot = models.ForeignKey(ParkingSpotModel, on_delete=models.CASCADE)
+    parking_spot = models.ForeignKey(
+        ParkingSpotModel, on_delete=models.CASCADE
+    )
     started_at = models.DateTimeField(auto_now=True)
     valid_until = models.DateTimeField()
