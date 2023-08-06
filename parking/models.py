@@ -76,8 +76,8 @@ class ParkingSpotModel(models.Model):
         """
         This one is tricky as we override it only
         for checking uniquisity of number field in parking scope
-        If model will be extended by different fields that should be unique globaly
-        it will cause problems
+        If model will be extended by different fields that should 
+        be unique globaly it will cause problems
         """
         qs = ParkingSpotModel.objects.filter(number=self.number)
         if qs.filter(parking=self.parking).exists():
