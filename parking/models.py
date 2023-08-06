@@ -1,9 +1,18 @@
 from django.db import models
 from django.utils import timezone
+from django.forms import ValidationError
 
 from parking.sensors import get_parking_spot_status
 from accounts.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
+
+
+def validate_parking(parking) -> None:
+    already_exists_count = ParkingSpotModel.objects.filter(
+        parking=parking
+    ).count()
+    if already_exists_count == parking.capacity:
+        raise ValidationError("Parking capacity exceeded.")
 
 
 class ParkingModel(models.Model):
@@ -25,8 +34,10 @@ class ParkingModel(models.Model):
 
 
 class ParkingSpotModel(models.Model):
-    number = models.CharField(max_length=32)
-    parking = models.ForeignKey(ParkingModel, on_delete=models.CASCADE)
+    number = models.CharField(max_length=32, unique=True)
+    parking = models.ForeignKey(
+        ParkingModel, on_delete=models.CASCADE, validators=[validate_parking]
+    )
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     occupied = models.BooleanField(default=False)
     # exact place lat, long???
@@ -60,6 +71,17 @@ class ParkingSpotModel(models.Model):
         self.occupied = False
         self.save()
         # Delete task which is watching time
+
+    def validate_unique(self):
+        """
+        This one is tricky as we override it only
+        for checking uniquisity of number field in parking scope
+        If model will be extended by different fields that should be unique globaly
+        it will cause problems
+        """
+        qs = ParkingSpotModel.objects.filter(number=self.number)
+        if qs.filter(parking=self.parking).exists():
+            raise ValidationError("Number must be unique per parking.")
 
 
 class AvailabilityModel(models.Model):

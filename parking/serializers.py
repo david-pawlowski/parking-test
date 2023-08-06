@@ -33,7 +33,7 @@ class AvailabilitySerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
-class ParkingSpotSerializer(serializers.HyperlinkedModelSerializer):
+class ParkingSpotSerializer(serializers.ModelSerializer):
     availability = AvailabilitySerializer(many=True, read_only=True)
 
     class Meta:
