@@ -3,13 +3,22 @@ from django.utils import timezone
 
 from parking.sensors import get_parking_spot_status
 from accounts.models import User
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class ParkingModel(models.Model):
     name = models.CharField(max_length=64)
-    latitude = models.DecimalField(decimal_places=2, max_digits=5)
-    longitude = models.DecimalField(decimal_places=2, max_digits=5)
-    capacity = models.IntegerField()
+    latitude = models.DecimalField(
+        decimal_places=2,
+        max_digits=5,
+        validators=[MinValueValidator(0), MaxValueValidator(180)],
+    )
+    longitude = models.DecimalField(
+        decimal_places=2,
+        max_digits=5,
+        validators=[MinValueValidator(0), MaxValueValidator(180)],
+    )
+    capacity = models.IntegerField(validators=[MinValueValidator(1)])
 
     def __str__(self) -> str:
         return f"Parking {self.name} with {self.capacity} slots."
