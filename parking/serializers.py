@@ -41,12 +41,13 @@ class ParkingSpotSerializer(serializers.ModelSerializer):
         fields = ["number", "parking", "owner", "occupied", "availability"]
 
 
-class ReservationSerializer(serializers.HyperlinkedModelSerializer):
+class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReservationModel
         fields = ["reserved_by", "parking_spot", "started_at", "valid_until"]
 
     def validate(self, attrs):
+        # Calculate cost and check if user have sufficient balance
         parking_spot = attrs["parking_spot"]
         valid_until = attrs["valid_until"]
         if parking_spot.is_available(valid_until):

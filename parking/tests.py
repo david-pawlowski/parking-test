@@ -1,5 +1,7 @@
+import datetime
 from django.forms import ValidationError
 from django.urls import reverse
+from django.utils import timezone
 
 from rest_framework.test import APITestCase
 from rest_framework import status
@@ -7,7 +9,12 @@ from accounts.models import User
 
 from parameterized import parameterized
 
-from parking.models import ParkingModel, ParkingSpotModel
+from parking.models import (
+    AvailabilityModel,
+    ParkingModel,
+    ParkingSpotModel,
+    ReservationModel,
+)
 
 # TODO: Rework test to actually check if validationerror was raised instead
 # of checking assertingnotequal
@@ -151,3 +158,32 @@ class ParkingSpotTests(APITestCase):
         self.assertNotEqual(ParkingSpotModel.objects.get().number, "Test2")
         self.assertEqual(ParkingSpotModel.objects.count(), 1)
         self.assertEqual(ParkingSpotModel.objects.get().number, "Test1")
+
+
+class ReservationTests(APITestCase):
+    def test_create_reservation(self):
+        url = reverse("reservations-list")
+        user = User.objects.create(
+            username="testuser", email="test@example.com", balance=12.0
+        )
+        parking = ParkingModel.objects.create(
+            name="test", latitude=111, longitude=111, capacity=12
+        )
+        spot = ParkingSpotModel.objects.create(
+            number="A1", parking=parking, owner=user, occupied=False
+        )
+        AvailabilityModel.objects.create(
+            parking_spot=spot,
+            available_from=timezone.now(),
+            available_to=timezone.now() + datetime.timedelta(days=2),
+            cost_per_hour=2,
+        )
+        data = {
+            "reserved_by": user.id,
+            "parking_spot": spot.id,
+            "started_at": timezone.now(),
+            "valid_until": timezone.now() + datetime.timedelta(days=1),
+        }
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(ReservationModel.objects.count(), 1)
