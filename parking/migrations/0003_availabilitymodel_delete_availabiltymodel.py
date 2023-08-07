@@ -5,7 +5,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("parking", "0002_remove_parkingspotmodel_is_reservable_and_more"),
     ]
@@ -25,7 +24,10 @@ class Migration(migrations.Migration):
                 ),
                 ("available_from", models.DateTimeField()),
                 ("available_to", models.DateTimeField()),
-                ("cost_per_hour", models.DecimalField(decimal_places=2, max_digits=4)),
+                (
+                    "cost_per_hour",
+                    models.DecimalField(decimal_places=2, max_digits=4),
+                ),
                 (
                     "parking_spot",
                     models.ForeignKey(

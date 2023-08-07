@@ -91,6 +91,9 @@ DATABASES = {
         "HOST": os.environ.get("DBHOST"),
         "USER": os.environ.get("DBUSER"),
         "PASSWORD": os.environ.get("DBPASS"),
+        "TEST": {
+            "NAME": "testdb",
+        },
     }
 }
 
@@ -140,4 +143,4 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 10,
 }
 
-AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = "accounts.User"

@@ -7,7 +7,9 @@ INSTALLED_APPS += [
     "whitenoise.runserver_nostatic",
 ]
 ALLOWED_HOSTS = (
-    [os.environ["WEBSITE_HOSTNAME"]] if "WEBSITE_HOSTNAME" in os.environ else []
+    [os.environ["WEBSITE_HOSTNAME"]]
+    if "WEBSITE_HOSTNAME" in os.environ
+    else []
 )
 CSRF_TRUSTED_ORIGINS = (
     ["https://" + os.environ["WEBSITE_HOSTNAME"]]
@@ -34,8 +36,6 @@ STATIC_ROOT = os.environ.get(
 )
 
 
-# Configure Postgres database based on connection string of the libpq Keyword/Value form
-# https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING
 conn_str = os.environ["AZURE_POSTGRESQL_CONNECTIONSTRING"]
 conn_str_params = {
     pair.split("=")[0]: pair.split("=")[1] for pair in conn_str.split(" ")
