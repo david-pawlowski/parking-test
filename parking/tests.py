@@ -87,8 +87,6 @@ class ParkingTests(APITestCase):
 
 
 class ParkingSpotTests(APITestCase):
-    ["number", "parking", "owner", "occupied", "availability"]
-
     def test_create_parking_spot(self):
         url = reverse("spots-list")
         user = User.objects.create(
