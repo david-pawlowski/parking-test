@@ -50,7 +50,6 @@ class ParkingTests(APITestCase):
             "capacity": 12,
         }
         response = self.client.post(url, data, format="json")
-        self.assertRaises(ValidationError)
         self.assertNotEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertNotEqual(ParkingModel.objects.count(), 1)
 
@@ -187,3 +186,91 @@ class ReservationTests(APITestCase):
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(ReservationModel.objects.count(), 1)
+
+    def test_create_reservation_fails_parking_spot_occupied(self):
+        url = reverse("reservations-list")
+        user = User.objects.create(
+            username="testuser", email="test@example.com", balance=12.0
+        )
+        parking = ParkingModel.objects.create(
+            name="test", latitude=111, longitude=111, capacity=3
+        )
+        spot = ParkingSpotModel.objects.create(
+            number="A1", parking=parking, owner=user, occupied=True
+        )
+        AvailabilityModel.objects.create(
+            parking_spot=spot,
+            available_from=timezone.now(),
+            available_to=timezone.now() + datetime.timedelta(days=2),
+            cost_per_hour=2,
+        )
+        data = {
+            "reserved_by": user.id,
+            "parking_spot": spot.id,
+            "started_at": timezone.now(),
+            "valid_until": timezone.now() + datetime.timedelta(days=1),
+        }
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(ReservationModel.objects.count(), 0)
+
+    @parameterized.expand(
+        [
+            (
+                timezone.now() + datetime.timedelta(days=1),
+                timezone.now(),
+                timezone.now() - datetime.timedelta(days=1),
+                timezone.now() + datetime.timedelta(days=5),
+            ),  # Start later than end
+            (
+                timezone.now(),
+                timezone.now() + datetime.timedelta(days=1),
+                timezone.now() + datetime.timedelta(hours=4),
+                timezone.now() + datetime.timedelta(hours=6),
+            ),  # Availible 4 hour after reservation starts
+            (
+                timezone.now() + datetime.timedelta(hours=4),
+                timezone.now() + datetime.timedelta(days=1),
+                timezone.now() + datetime.timedelta(days=1),
+                timezone.now(),
+            ),  # Availablity starts later than ends
+            (
+                timezone.now(),
+                timezone.now() + datetime.timedelta(days=3),
+                timezone.now() - datetime.timedelta(hours=4),
+                timezone.now() + datetime.timedelta(days=2),
+            ),  # Reservation ends later than availability
+        ]
+    )
+    def test_create_reservation_fails_wrong_time_frame(
+        self,
+        reservation_starts,
+        reservation_ends,
+        availability_starts,
+        availability_ends,
+    ):
+        url = reverse("reservations-list")
+        user = User.objects.create(
+            username="testuser", email="test@example.com", balance=12.0
+        )
+        parking = ParkingModel.objects.create(
+            name="test", latitude=111, longitude=111, capacity=3
+        )
+        spot = ParkingSpotModel.objects.create(
+            number="A1", parking=parking, owner=user, occupied=True
+        )
+        AvailabilityModel.objects.create(
+            parking_spot=spot,
+            available_from=availability_starts,
+            available_to=availability_ends,
+            cost_per_hour=2,
+        )
+        data = {
+            "reserved_by": user.id,
+            "parking_spot": spot.id,
+            "started_at": reservation_starts,
+            "valid_until": reservation_ends,
+        }
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(ReservationModel.objects.count(), 0)
