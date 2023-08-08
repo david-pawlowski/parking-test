@@ -92,18 +92,20 @@ class ParkingTests(APITestCase):
 
 
 class ParkingSpotTests(APITestCase):
-    def test_create_parking_spot(self):
-        url = reverse("spots-list")
-        user = User.objects.create(
+    def setUp(self):
+        self.user = User.objects.create(
             username="testuser", email="test@example.com", balance=12.0
         )
-        parking = ParkingModel.objects.create(
+        self.parking = ParkingModel.objects.create(
             name="test", latitude=111, longitude=111, capacity=12
         )
+    def test_create_parking_spot(self):
+        url = reverse("spots-list")
+
         data = {
             "number": "Test1",
-            "parking": parking.id,
-            "owner": user.id,
+            "parking": self.parking.id,
+            "owner": self.user.id,
             "occupied": True,
         }
         response = self.client.post(url, data, format="json")
@@ -113,19 +115,15 @@ class ParkingSpotTests(APITestCase):
 
     def test_create_parking_spot_fails_capacity_exceeded(self):
         url = reverse("spots-list")
-        user = User.objects.create(
-            username="testuser", email="test@example.com", balance=12.0
-        )
-        parking = ParkingModel.objects.create(
-            name="test", latitude=111, longitude=111, capacity=1
-        )
+        self.parking.capacity = 1
+        self.parking.save()
         ParkingSpotModel.objects.create(
-            number="Test1", parking=parking, owner=user, occupied=False
+            number="Test1", parking=self.parking, owner=self.user, occupied=False
         )
         data = {
             "number": "Test2",
-            "parking": parking.id,
-            "owner": user.id,
+            "parking": self.parking.id,
+            "owner": self.user.id,
             "occupied": True,
         }
         response = self.client.post(url, data, format="json")
@@ -136,19 +134,13 @@ class ParkingSpotTests(APITestCase):
 
     def test_create_parking_spot_fails_same_spot_number_exists(self):
         url = reverse("spots-list")
-        user = User.objects.create(
-            username="testuser", email="test@example.com", balance=12.0
-        )
-        parking = ParkingModel.objects.create(
-            name="test", latitude=111, longitude=111, capacity=3
-        )
         ParkingSpotModel.objects.create(
-            number="Test1", parking=parking, owner=user, occupied=False
+            number="Test1", parking=self.parking, owner=self.user, occupied=False
         )
         data = {
             "number": "Test1",
-            "parking": parking.id,
-            "owner": user.id,
+            "parking": self.parking.id,
+            "owner": self.user.id,
             "occupied": True,
         }
         response = self.client.post(url, data, format="json")
