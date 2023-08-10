@@ -1,4 +1,6 @@
 import datetime
+import pytz
+
 from django.urls import reverse
 from django.utils import timezone
 
@@ -99,6 +101,7 @@ class ParkingSpotTests(APITestCase):
         self.parking = ParkingModel.objects.create(
             name="test", latitude=111, longitude=111, capacity=12
         )
+
     def test_create_parking_spot(self):
         url = reverse("spots-list")
 
@@ -118,7 +121,10 @@ class ParkingSpotTests(APITestCase):
         self.parking.capacity = 1
         self.parking.save()
         ParkingSpotModel.objects.create(
-            number="Test1", parking=self.parking, owner=self.user, occupied=False
+            number="Test1",
+            parking=self.parking,
+            owner=self.user,
+            occupied=False,
         )
         data = {
             "number": "Test2",
@@ -135,7 +141,10 @@ class ParkingSpotTests(APITestCase):
     def test_create_parking_spot_fails_same_spot_number_exists(self):
         url = reverse("spots-list")
         ParkingSpotModel.objects.create(
-            number="Test1", parking=self.parking, owner=self.user, occupied=False
+            number="Test1",
+            parking=self.parking,
+            owner=self.user,
+            occupied=False,
         )
         data = {
             "number": "Test1",
@@ -267,3 +276,29 @@ class ReservationTests(APITestCase):
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(ReservationModel.objects.count(), 0)
+
+    def test_calculate_total_cost(self):
+        url = reverse("reservations-list")
+        available_from = datetime.datetime(2023, 8, 10, 23, 0, 0, 0, pytz.UTC)
+        user = User.objects.create(
+            username="testuser", email="test@example.com", balance=12.0
+        )
+        parking = ParkingModel.objects.create(
+            name="test", latitude=111, longitude=111, capacity=12
+        )
+        spot = ParkingSpotModel.objects.create(
+            number="A1", parking=parking, owner=user, occupied=False
+        )
+        AvailabilityModel.objects.create(
+            parking_spot=spot,
+            available_from=available_from,
+            available_to=available_from + datetime.timedelta(days=2),
+            cost_per_hour=1,
+        )
+        reservation = ReservationModel.objects.create(
+            reserved_by=user,
+            parking_spot=spot,
+            started_at=available_from,
+            valid_until=available_from + datetime.timedelta(days=1),
+        )
+        self.assertEqual(reservation.total_cost, 24 * 1)

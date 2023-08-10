@@ -1,3 +1,4 @@
+from asyncio import proactor_events
 from django.db import models
 from django.utils import timezone
 from django.forms import ValidationError
@@ -103,5 +104,25 @@ class ReservationModel(models.Model):
 
     @property
     def total_hours(self):
-        total_hours = round((self.valid_until - self.started_at).total_seconds() / 3600)
+        total_hours = round(
+            (self.valid_until - self.started_at).total_seconds() / 3600
+        )
         return total_hours
+
+    @property
+    def total_cost(self):
+        cost_per_hour = (
+            AvailabilityModel.objects.filter(
+                parking_spot=self.parking_spot,
+                available_from__lte=self.started_at,
+                available_to__gte=self.valid_until,
+            )
+            .values_list("cost_per_hour", flat=True)
+            .order_by("cost_per_hour")
+            .first()
+        )
+        if not cost_per_hour:
+            raise Exception(
+                "Availability model that matches reservation was not found. This shouldnt happen"
+            )
+        return cost_per_hour * self.total_hours
