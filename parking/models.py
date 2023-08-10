@@ -100,3 +100,8 @@ class ReservationModel(models.Model):
     )
     started_at = models.DateTimeField(auto_now=True)
     valid_until = models.DateTimeField()
+
+    @property
+    def total_hours(self):
+        total_hours = round((self.valid_until - self.started_at).total_seconds() / 3600)
+        return total_hours
