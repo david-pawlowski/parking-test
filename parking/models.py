@@ -62,6 +62,22 @@ class ParkingSpotModel(models.Model):
                 return True
         return False
 
+    def calculate_cost(self, start, stop):
+        cost_per_hour = (
+            AvailabilityModel.objects.filter(
+                parking_spot=self,
+                available_from__lte=start,
+                available_to__gte=stop,
+            )
+            .values_list("cost_per_hour", flat=True)
+            .order_by("cost_per_hour")
+            .first()
+        )
+        total_hours = round((start - stop).total_seconds() / 3600)
+        if not cost_per_hour:
+            raise Exception("Cant calculate cost.")
+        return total_hours * cost_per_hour
+
     def reserve(self):
         self.occupied = True
         self.save()
