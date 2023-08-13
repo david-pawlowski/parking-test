@@ -1,7 +1,6 @@
+from django.utils import timezone
 from django.forms import ValidationError
 from rest_framework import serializers
-
-import parking
 
 from .models import (
     ParkingModel,
@@ -44,6 +43,7 @@ class ParkingSpotSerializer(serializers.ModelSerializer):
 
 
 class ReservationSerializer(serializers.ModelSerializer):
+    started_at = serializers.DateTimeField(initial=timezone.now())
     class Meta:
         model = ReservationModel
         fields = ["reserved_by", "parking_spot", "started_at", "valid_until"]
@@ -57,8 +57,8 @@ class ReservationSerializer(serializers.ModelSerializer):
                 "Parking spot is not available for rent in provided time frame."
             )
 
-        started_at = attrs["started_at"]
         reserved_by = attrs["reserved_by"]
+        started_at = attrs["started_at"]
         if reserved_by.balance < parking_spot.calculate_cost(
             started_at, valid_until
         ):
