@@ -278,8 +278,8 @@ class ReservationTests(APITestCase):
         self.assertEqual(ReservationModel.objects.count(), 0)
 
     def test_calculate_total_cost(self):
-        url = reverse("reservations-list")
         available_from = datetime.datetime(2023, 8, 10, 23, 0, 0, 0, pytz.UTC)
+        available_to = datetime.datetime(2023, 8, 11, 23, 0, 0, 0, pytz.UTC)
         user = User.objects.create(
             username="testuser", email="test@example.com", balance=12.0
         )
@@ -299,6 +299,6 @@ class ReservationTests(APITestCase):
             reserved_by=user,
             parking_spot=spot,
             started_at=available_from,
-            valid_until=available_from + datetime.timedelta(days=1),
+            valid_until=available_to,
         )
         self.assertEqual(reservation.total_cost, 24 * 1)

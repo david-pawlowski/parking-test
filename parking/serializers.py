@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.forms import ValidationError
 from rest_framework import serializers
 
@@ -42,6 +43,8 @@ class ParkingSpotSerializer(serializers.ModelSerializer):
 
 
 class ReservationSerializer(serializers.ModelSerializer):
+    started_at = serializers.DateTimeField(initial=timezone.now())
+
     class Meta:
         model = ReservationModel
         fields = ["reserved_by", "parking_spot", "started_at", "valid_until"]
@@ -50,11 +53,18 @@ class ReservationSerializer(serializers.ModelSerializer):
         # Calculate cost and check if user have sufficient balance
         parking_spot = attrs["parking_spot"]
         valid_until = attrs["valid_until"]
-        if parking_spot.is_available(valid_until):
-            return super().validate(attrs)
-        raise ValidationError(
-            "Parking spot is not available for rent in provided time frame."
-        )
+        if not parking_spot.is_available(valid_until):
+            raise ValidationError(
+                "Parking spot is not available for rent in provided time frame."
+            )
+
+        reserved_by = attrs["reserved_by"]
+        started_at = attrs["started_at"]
+        if reserved_by.balance < parking_spot.calculate_cost(
+            started_at, valid_until
+        ):
+            raise ValidationError("User have unsufficient funds.")
+        return super().validate(attrs)
 
     def validate_parking_spot(self, parking_spot):
         if parking_spot.occupied:
