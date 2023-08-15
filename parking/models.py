@@ -115,7 +115,7 @@ class ReservationModel(models.Model):
     parking_spot = models.ForeignKey(
         ParkingSpotModel, on_delete=models.CASCADE
     )
-    started_at = models.DateTimeField(auto_now=True)
+    started_at = models.DateTimeField()
     valid_until = models.DateTimeField()
 
     @property

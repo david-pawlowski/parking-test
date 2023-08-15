@@ -44,6 +44,7 @@ class ParkingSpotSerializer(serializers.ModelSerializer):
 
 class ReservationSerializer(serializers.ModelSerializer):
     started_at = serializers.DateTimeField(initial=timezone.now())
+
     class Meta:
         model = ReservationModel
         fields = ["reserved_by", "parking_spot", "started_at", "valid_until"]
