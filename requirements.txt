@@ -8,3 +8,4 @@ parameterized
 pytest-django
 pyyaml
 uritemplate
+pylint_django
