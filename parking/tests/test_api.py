@@ -1,4 +1,5 @@
 import datetime
+from django.conf import settings
 import pytz
 
 from django.urls import reverse
