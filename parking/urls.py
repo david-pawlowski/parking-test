@@ -1,8 +1,8 @@
 from rest_framework import routers
+
 from parking import views
 
 router = routers.DefaultRouter()
-router.register(r"users", views.UserViewSet, basename="users")
 router.register(r"parkings", views.ParkingViewSet, basename="parkings")
 router.register(r"spots", views.ParkingSpotViewSet, basename="spots")
 router.register(

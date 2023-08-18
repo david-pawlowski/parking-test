@@ -1,29 +1,16 @@
-from accounts.models import User
+from rest_framework import viewsets
 from parking.models import (
     AvailabilityModel,
     ParkingModel,
     ParkingSpotModel,
     ReservationModel,
 )
-from rest_framework import viewsets
-from rest_framework import permissions
 from parking.serializers import (
     AvailabilitySerializer,
-    UserSerializer,
     ParkingSerializer,
     ParkingSpotSerializer,
     ReservationSerializer,
 )
-
-
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-
-    queryset = User.objects.all().order_by("-date_joined")
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
 
 class ParkingViewSet(viewsets.ModelViewSet):
