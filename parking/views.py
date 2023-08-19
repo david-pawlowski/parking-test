@@ -38,7 +38,7 @@ class ReservationViewSet(viewsets.ModelViewSet):
         # to check when reservation time ends
         # parking spot sensor data to determine if it is occupied
         # If it is start charging extra
-        user_email = User.objects.get(pk=serializer.data.get('reserved_by')).email
+        user_email = User.objects.get(pk=serializer.validated_data.get('reserved_by')).email
         email_content = "leno paleno"
         send_reservation_mail.delay(user_email, email_content)
         parking_spot.occupied = True
