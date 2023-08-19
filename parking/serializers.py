@@ -16,7 +16,7 @@ class ParkingSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["name", "latitude", "longitude", "capacity"]
 
 
-class AvailabilitySerializer(serializers.HyperlinkedModelSerializer):
+class AvailabilitySerializer(serializers.ModelSerializer):
     class Meta:
         model = AvailabilityModel
         fields = [
@@ -46,13 +46,13 @@ class ReservationSerializer(serializers.ModelSerializer):
         # Calculate cost and check if user have sufficient balance
         parking_spot = attrs["parking_spot"]
         valid_until = attrs["valid_until"]
-        if not parking_spot.is_available(valid_until):
+        started_at = attrs["started_at"]
+        if not parking_spot.is_available(started_at, valid_until):
             raise ValidationError(
                 "Parking spot is not available for rent in provided time frame."
             )
 
         reserved_by = attrs["reserved_by"]
-        started_at = attrs["started_at"]
         if reserved_by.balance < parking_spot.calculate_cost(
             started_at, valid_until
         ):

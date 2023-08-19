@@ -9,3 +9,5 @@ pytest-django
 pyyaml
 uritemplate
 pylint_django
+celery
+Redis
