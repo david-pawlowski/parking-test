@@ -39,13 +39,21 @@ class ReservationViewSet(viewsets.ModelViewSet):
         # to check when reservation time ends
         # parking spot sensor data to determine if it is occupied
         # If it is start charging extra
-        user_email = User.objects.get(
-            pk=serializer.validated_data.get("reserved_by")
-        ).email
-        email_content = "leno paleno"
-        send_reservation_mail.delay(user_email, email_content)
+        reserver_id = serializer.validated_data.get("reserved_by").email
+        owner_id = serializer.validated_data.get("parking_spot").owner.email
+        self.notify_users(reserver_id, owner_id)
         parking_spot.occupied = True
         parking_spot.save()
+
+    @staticmethod
+    def notify_users(reserver_email, owner_email):
+        title = "Your parking reservation!"
+        owner_email_content = "leno paleno"
+        reserver_email_content = "leno paleno"
+        send_reservation_mail.delay(
+            title, reserver_email, reserver_email_content
+        )
+        send_reservation_mail.delay(title, owner_email, owner_email_content)
 
 
 class AvailabilitySpotViewSet(viewsets.ModelViewSet):
