@@ -52,11 +52,10 @@ class ParkingSpotModel(models.Model):
     def status(self):
         return get_parking_spot_status(self.number)
 
-    def is_available(self, end_of_reservation):
-        now = timezone.now()
+    def is_available(self, start_of_reservation, end_of_reservation):
         for availability in self.availability.all():
             if (
-                availability.available_from < now
+                availability.available_from < start_of_reservation
                 and availability.available_to > end_of_reservation
             ):
                 return True

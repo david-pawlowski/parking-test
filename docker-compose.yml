@@ -5,7 +5,7 @@ services:
     container_name: django_app
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/parking_test
+      - .:.
     ports:
       - 8000:8000
       - 5678:5678
@@ -39,4 +39,3 @@ services:
 
 volumes:
   postgres_data:
-  parking_test:
