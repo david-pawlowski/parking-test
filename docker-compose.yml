@@ -22,6 +22,21 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - 5432:5432
+
+  redis:
+    image: redis:latest
+
+  celery_worker:
+    build: .
+    env_file:
+      - ./.env
+    command: celery -A app worker -l info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - db
+
 volumes:
   postgres_data:
   parking_test:
