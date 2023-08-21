@@ -28,6 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "localhost",
+    "parkingowa.azurewebsites.net",
 ]
 
 
