@@ -60,4 +60,4 @@ jobs:
         with:
           app-name: 'parkingowa'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F590AD677F3044F395DFDE2F9FDD6D4C }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D5D204C3E1BC48BCB532F1AC1B7807A8 }}
