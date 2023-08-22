@@ -302,3 +302,30 @@ class ReservationTests(APITestCase):
             valid_until=available_to,
         )
         self.assertEqual(reservation.total_cost, 24 * 1)
+
+
+class AvailabilityTests(APITestCase):
+    def test_split(self):
+        available_from = datetime.datetime(2023, 8, 10, 23, 0, 0, 0, pytz.UTC)
+        available_to = datetime.datetime(2023, 8, 16, 23, 0, 0, 0, pytz.UTC)
+        user = User.objects.create(
+            username="testuser", email="test@example.com", balance=12.0
+        )
+        parking = ParkingModel.objects.create(
+            name="test", latitude=111, longitude=111, capacity=12
+        )
+        spot = ParkingSpotModel.objects.create(
+            number="A1", parking=parking, owner=user, occupied=False
+        )
+        availability = AvailabilityModel.objects.create(
+            parking_spot=spot,
+            available_from=available_from,
+            available_to=available_to,
+            cost_per_hour=1,
+        )
+        split_start = datetime.datetime(2023, 8, 11, 23, 0, 0, 0, pytz.UTC)
+        split_end = datetime.datetime(2023, 8, 12, 23, 0, 0, 0, pytz.UTC)
+        self.assertEqual(AvailabilityModel.objects.count(), 1)
+        availability.split(split_start, split_end)
+        self.assertEqual(AvailabilityModel.objects.count(), 3)
+

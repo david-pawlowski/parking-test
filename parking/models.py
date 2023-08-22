@@ -108,6 +108,25 @@ class AvailabilityModel(models.Model):
     available_to = models.DateTimeField()
     cost_per_hour = models.DecimalField(decimal_places=2, max_digits=4)
 
+    def split(self, start, end):
+        """Split availability into two parts. One before reservation and one after."""
+        if start - self.available_from > timezone.timedelta(hours=1):
+            availability = AvailabilityModel(
+                parking_spot=self.parking_spot,
+                available_from=self.available_from,
+                available_to=start,
+                cost_per_hour=self.cost_per_hour,
+            )
+            availability.save()
+        if self.available_to - end > timezone.timedelta(hours=1):
+            availability = AvailabilityModel(
+                parking_spot=self.parking_spot,
+                available_from=end,
+                available_to=self.available_to,
+                cost_per_hour=self.cost_per_hour,
+            )
+            availability.save()
+
 
 class ReservationModel(models.Model):
     reserved_by = models.ForeignKey(User, on_delete=models.CASCADE)

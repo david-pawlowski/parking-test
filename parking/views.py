@@ -42,6 +42,7 @@ class ReservationViewSet(viewsets.ModelViewSet):
         reserver_id = serializer.validated_data.get("reserved_by").email
         owner_id = serializer.validated_data.get("parking_spot").owner.email
         self.notify_users(reserver_id, owner_id)
+        # Should be set to occupied when reservation starts
         parking_spot.occupied = True
         parking_spot.save()
 
