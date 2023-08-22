@@ -1,5 +1,4 @@
 from rest_framework import viewsets
-from accounts.models import User
 from parking.models import (
     AvailabilityModel,
     ParkingModel,

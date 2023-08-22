@@ -1,4 +1,3 @@
-from asyncio import proactor_events
 from django.db import models
 from django.utils import timezone
 from django.forms import ValidationError
@@ -157,6 +156,7 @@ class ReservationModel(models.Model):
         )
         if not cost_per_hour:
             raise Exception(
-                "Availability model that matches reservation was not found. This shouldnt happen"
+                "Availability model that matches reservation was not found. \
+                    This shouldnt happen"
             )
         return cost_per_hour * self.total_hours

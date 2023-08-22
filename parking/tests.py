@@ -326,4 +326,3 @@ class AvailabilityTests(APITestCase):
         self.assertEqual(AvailabilityModel.objects.count(), 1)
         availability.split(split_start, split_end)
         self.assertEqual(AvailabilityModel.objects.count(), 3)
-
