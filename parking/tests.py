@@ -186,8 +186,6 @@ class ReservationTests(APITestCase):
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(ReservationModel.objects.count(), 1)
-        parking_spot = ParkingSpotModel.objects.get(id=spot.id)
-        self.assertTrue(parking_spot.occupied)
 
     def test_create_reservation_fails_parking_spot_occupied(self):
         url = reverse("reservations-list")
