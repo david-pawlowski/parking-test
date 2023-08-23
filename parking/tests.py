@@ -17,9 +17,6 @@ from parking.models import (
     ReservationModel,
 )
 
-# TODO: Rework test to actually check if validationerror was raised instead
-# of checking assertingnotequal
-
 
 class ParkingTests(APITestCase):
     def test_create_parking(self):
@@ -326,3 +323,27 @@ class AvailabilityTests(APITestCase):
         self.assertEqual(AvailabilityModel.objects.count(), 1)
         availability.split(split_start, split_end)
         self.assertEqual(AvailabilityModel.objects.count(), 3)
+
+    def test_split_doesnt_create_objects_too_less_time_between_reservations(self):
+        available_from = datetime.datetime(2023, 8, 10, 23, 0, 0, 0, pytz.UTC)
+        available_to = datetime.datetime(2023, 8, 16, 23, 0, 0, 0, pytz.UTC)
+        user = User.objects.create(
+            username="testuser", email="test@example.com", balance=12.0
+        )
+        parking = ParkingModel.objects.create(
+            name="test", latitude=111, longitude=111, capacity=12
+        )
+        spot = ParkingSpotModel.objects.create(
+            number="A1", parking=parking, owner=user, occupied=False
+        )
+        availability = AvailabilityModel.objects.create(
+            parking_spot=spot,
+            available_from=available_from,
+            available_to=available_to,
+            cost_per_hour=1,
+        )
+        split_start = datetime.datetime(2023, 8, 10, 23, 30, 0, 0, pytz.UTC)
+        split_end = datetime.datetime(2023, 8, 16, 22, 30, 0, 0, pytz.UTC)
+        self.assertEqual(AvailabilityModel.objects.count(), 1)
+        availability.split(split_start, split_end)
+        self.assertEqual(AvailabilityModel.objects.count(), 1)
