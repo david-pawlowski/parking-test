@@ -1,10 +1,10 @@
 from django.db import models
 from django.utils import timezone
 from django.forms import ValidationError
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 from parking.sensors import get_parking_spot_status
 from accounts.models import User
-from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 def validate_parking(parking) -> None:
@@ -44,8 +44,7 @@ class ParkingSpotModel(models.Model):
     # photo maybe
 
     def __str__(self) -> str:
-        return f"Spot {self.number} on {self.parking.name} \
-            currently {'not' if not self.occupied else ''} occupied"
+        return f"Spot {self.number} on {self.parking.name}"
 
     @property
     def status(self):
@@ -126,6 +125,10 @@ class AvailabilityModel(models.Model):
             )
             availability.save()
 
+    def __str__(self) -> str:
+        return f"Availability of {self.parking_spot} from {self.available_from} \
+            to {self.available_to}"
+
 
 class ReservationModel(models.Model):
     reserved_by = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -160,3 +163,7 @@ class ReservationModel(models.Model):
                     This shouldnt happen"
             )
         return cost_per_hour * self.total_hours
+
+    def __str__(self) -> str:
+        return f"Reservation {self.id} for {self.parking_spot} \
+            by {self.reserved_by} from {self.started_at} to {self.valid_until}"
