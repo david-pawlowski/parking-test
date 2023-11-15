@@ -6,7 +6,13 @@ from .settings import BASE_DIR
 INSTALLED_APPS += [
     "whitenoise.runserver_nostatic",
 ]
-ALLOWED_HOSTS = ["parking-spots.azurewebsites.net",] if os.environ.get('IS_PROD') else []
+ALLOWED_HOSTS = (
+    [
+        "parking-spots.azurewebsites.net",
+    ]
+    if os.environ.get("IS_PROD")
+    else []
+)
 
 CSRF_TRUSTED_ORIGINS = (
     ["https://parking-spots.azurewebsites.net"]
@@ -31,7 +37,7 @@ STATIC_URL = os.environ.get("DJANGO_STATIC_URL", "/static/")
 STATIC_ROOT = os.environ.get(
     "DJANGO_STATIC_ROOT", os.path.join(BASE_DIR, "staticfiles")
 )
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 conn_str = os.environ["AZURE_POSTGRESQL_CONNECTIONSTRING"]
 conn_str_params = {
