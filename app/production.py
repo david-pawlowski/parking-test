@@ -16,7 +16,7 @@ CSRF_TRUSTED_ORIGINS = (
     if "WEBSITE_HOSTNAME" in os.environ
     else []
 )
-DEBUG = False
+DEBUG = True
 SECRET_KEY = os.getenv("SECRETKEY")
 
 MIDDLEWARE = [
