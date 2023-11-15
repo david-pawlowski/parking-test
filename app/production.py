@@ -6,11 +6,7 @@ from .settings import BASE_DIR
 INSTALLED_APPS += [
     "whitenoise.runserver_nostatic",
 ]
-ALLOWED_HOSTS = (
-    [os.environ["WEBSITE_HOSTNAME"]]
-    if "WEBSITE_HOSTNAME" in os.environ
-    else []
-)
+ALLOWED_HOSTS = ["parking-spots.azurewebsites.net"]
 CSRF_TRUSTED_ORIGINS = (
     ["https://" + os.environ["WEBSITE_HOSTNAME"]]
     if "WEBSITE_HOSTNAME" in os.environ
