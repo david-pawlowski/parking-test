@@ -8,13 +8,11 @@ from dotenv import load_dotenv
 
 def main():
     """Run administrative tasks."""
-    if "WEBSITE_HOSTNAME" not in os.environ:
+    if not os.environ.get("IS_PROD"):
         load_dotenv("./.env")
 
     settings_module = (
-        "app.production"
-        if "WEBSITE_HOSTNAME" in os.environ
-        else "app.settings"
+        "app.production" if os.environ.get("IS_PROD") else "app.settings"
     )
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", settings_module)
 

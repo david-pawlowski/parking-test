@@ -12,14 +12,14 @@ import os
 from django.core.wsgi import get_wsgi_application
 
 settings_module = (
-    "app.production" if "WEBSITE_HOSTNAME" in os.environ else "app.settings"
+    "app.production" if os.environ.get("IS_PROD") else "app.settings"
 )
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", settings_module)
 
 application = get_wsgi_application()
 
-if "WEBSITE_HOSTNAME" not in os.environ:
+if not os.environ.get("IS_PROD"):
     import debugpy
 
     debugpy.listen(("0.0.0.0", 5678))
