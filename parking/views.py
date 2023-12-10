@@ -11,7 +11,7 @@ from parking.serializers import (
     ParkingSpotSerializer,
     ReservationSerializer,
 )
-from parking.tasks import send_reservation_mail
+from parking.tasks import send_email_task
 
 
 class ParkingViewSet(viewsets.ModelViewSet):
@@ -48,10 +48,8 @@ class ReservationViewSet(viewsets.ModelViewSet):
         title = "Your parking reservation!"
         owner_email_content = "leno paleno"
         reserver_email_content = "leno paleno"
-        send_reservation_mail.delay(
-            title, reserver_email, reserver_email_content
-        )
-        send_reservation_mail.delay(title, owner_email, owner_email_content)
+        send_email_task.delay(title, reserver_email, reserver_email_content)
+        send_email_task.delay(title, owner_email, owner_email_content)
 
 
 class AvailabilitySpotViewSet(viewsets.ModelViewSet):

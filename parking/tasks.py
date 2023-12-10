@@ -4,7 +4,7 @@ from django.conf import settings
 
 
 @shared_task(bind=True)
-def send_reservation_mail(self, mail_subject, target_mail, message):
+def send_email_task(self, mail_subject, target_mail, message):
     send_mail(
         subject=mail_subject,
         message=message,
