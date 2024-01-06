@@ -11,3 +11,4 @@ uritemplate
 pylint_django
 celery
 Redis
+django-cors-headers
