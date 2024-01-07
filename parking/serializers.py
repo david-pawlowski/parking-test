@@ -13,13 +13,14 @@ from .models import (
 class ParkingSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ParkingModel
-        fields = ["name", "latitude", "longitude", "capacity"]
+        fields = ["id", "name", "latitude", "longitude", "capacity"]
 
 
 class AvailabilitySerializer(serializers.ModelSerializer):
     class Meta:
         model = AvailabilityModel
         fields = [
+            "id",
             "available_from",
             "available_to",
             "cost_per_hour",
@@ -32,7 +33,7 @@ class ParkingSpotSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ParkingSpotModel
-        fields = ["number", "parking", "owner", "occupied", "availability"]
+        fields = ["id", "number", "parking", "owner", "occupied", "availability"]
 
 
 class ReservationSerializer(serializers.ModelSerializer):
@@ -40,7 +41,7 @@ class ReservationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ReservationModel
-        fields = ["reserved_by", "parking_spot", "started_at", "valid_until"]
+        fields = ["id", "reserved_by", "parking_spot", "started_at", "valid_until"]
 
     def validate(self, attrs):
         # Calculate cost and check if user have sufficient balance
