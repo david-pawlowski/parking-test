@@ -21,9 +21,17 @@ class ParkingViewSet(viewsets.ModelViewSet):
 
 
 class ParkingSpotViewSet(viewsets.ModelViewSet):
-    queryset = ParkingSpotModel.objects.prefetch_related("availability").all()
     serializer_class = ParkingSpotSerializer
     permission_classess = []
+
+    def get_queryset(self):
+        parking_id = self.kwargs.get("parking_pk")
+        filters = {"parking": parking_id} if parking_id else {}
+        return (
+            ParkingSpotModel.objects.filter(**filters)
+            .prefetch_related("availability")
+            .all()
+        )
 
 
 class ReservationViewSet(viewsets.ModelViewSet):
