@@ -22,6 +22,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "localhost",
+    "*",
     "127.0.0.1",
     "parking-spots.azurewebsites.net", #TODO: At least make it work on prod...
 ]
