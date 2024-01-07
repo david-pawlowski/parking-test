@@ -10,7 +10,7 @@ router.register(
     r"reservations", views.ReservationViewSet, basename="reservations"
 )
 router.register(
-    r"spots-availabilities",
+    r"availabilities",
     views.AvailabilitySpotViewSet,
     basename="spots-availabilities",
 )
@@ -23,7 +23,7 @@ parking_router.register(
     r"spots", views.ParkingSpotViewSet, basename="parking-spots"
 )
 
-#spot router
+# spot router
 spot_router = routers.NestedSimpleRouter(
     parking_router, r"spots", lookup="spot"
 )
