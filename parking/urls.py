@@ -22,3 +22,11 @@ parking_router = routers.NestedSimpleRouter(
 parking_router.register(
     r"spots", views.ParkingSpotViewSet, basename="parking-spots"
 )
+
+#spot router
+spot_router = routers.NestedSimpleRouter(
+    parking_router, r"spots", lookup="spot"
+)
+spot_router.register(
+    r"availabilities", views.AvailabilitySpotViewSet, basename="availabilities"
+)
