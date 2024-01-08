@@ -12,3 +12,4 @@ pylint_django
 celery
 Redis
 django-cors-headers
+drf-nested-routers

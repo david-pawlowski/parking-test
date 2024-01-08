@@ -3,7 +3,7 @@ from django.views.generic import TemplateView
 from django.urls import include, path
 from rest_framework.schemas import get_schema_view
 
-from parking.urls import router
+from parking.urls import router, parking_router, spot_router
 
 urlpatterns = [
     path(
@@ -23,4 +23,6 @@ urlpatterns = [
     ),
     path("admin/", admin.site.urls),
     path("", include(router.urls)),
+    path("", include(parking_router.urls)),
+    path("", include(spot_router.urls)),
 ]
