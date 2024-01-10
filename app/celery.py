@@ -1,8 +1,10 @@
 import os
 from celery import Celery
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "app.settings")
-
+if not os.environ.get("IS_PROD"):
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "app.settings")
+else:
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "app.production")
 app = Celery("app")
 app.config_from_object("django.conf:settings", namespace="CELERY")
 app.autodiscover_tasks()
