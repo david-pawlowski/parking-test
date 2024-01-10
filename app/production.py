@@ -11,10 +11,8 @@ ALLOWED_HOSTS = (
     [
         "parking-spots.azurewebsites.net",
         "e-parking.site",
-        # My local address Bra
-        "91.145.153.63",
         # STatic web app
-        "https://nice-bay-0ac2b9603.4.azurestaticapps.net/",
+        "https://nice-bay-0ac2b9603.4.azurestaticapps.net",
     ]
     if os.environ.get("IS_PROD")
     else []
@@ -24,8 +22,7 @@ CSRF_TRUSTED_ORIGINS = (
     [
         "https://parking-spots.azurewebsites.net",
         "http://e-parking.site",
-        "http://91.145.153.63:3000",
-        "https://nice-bay-0ac2b9603.4.azurestaticapps.net/",
+        "https://nice-bay-0ac2b9603.4.azurestaticapps.net",
     ]
     if "WEBSITE_HOSTNAME" in os.environ
     else []
