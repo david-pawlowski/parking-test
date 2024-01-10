@@ -15,7 +15,7 @@ from parking.tasks import send_email_task
 
 
 class ParkingViewSet(viewsets.ModelViewSet):
-    queryset = ParkingModel.objects.all()
+    queryset = ParkingModel.objects.all().order_by("-capacity")
     serializer_class = ParkingSerializer
     permission_classess = []
 
@@ -30,12 +30,12 @@ class ParkingSpotViewSet(viewsets.ModelViewSet):
         return (
             ParkingSpotModel.objects.filter(**filters)
             .prefetch_related("availability")
-            .all()
+            .all().order_by("id")
         )
 
 
 class ReservationViewSet(viewsets.ModelViewSet):
-    queryset = ReservationModel.objects.all()
+    queryset = ReservationModel.objects.all().order_by("-started_at")
     serializer_class = ReservationSerializer
     permission_classess = []
 
@@ -61,6 +61,6 @@ class ReservationViewSet(viewsets.ModelViewSet):
 
 
 class AvailabilitySpotViewSet(viewsets.ModelViewSet):
-    queryset = AvailabilityModel.objects.select_related("parking_spot").all()
+    queryset = AvailabilityModel.objects.select_related("parking_spot").all().order_by("-id")
     serializer_class = AvailabilitySerializer
     permission_classess = []

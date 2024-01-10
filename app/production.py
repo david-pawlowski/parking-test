@@ -6,20 +6,23 @@ from .settings import BASE_DIR
 INSTALLED_APPS += [
     "whitenoise.runserver_nostatic",
 ]
+
 ALLOWED_HOSTS = (
     [
         "parking-spots.azurewebsites.net",
+        "e-parking.site",
     ]
     if os.environ.get("IS_PROD")
     else []
 )
 
 CSRF_TRUSTED_ORIGINS = (
-    ["https://parking-spots.azurewebsites.net"]
+    ["https://parking-spots.azurewebsites.net", "http://e-parking.site",]
     if "WEBSITE_HOSTNAME" in os.environ
     else []
 )
-DEBUG = False
+# temporary
+DEBUG = True
 SECRET_KEY = os.getenv("SECRETKEY")
 
 MIDDLEWARE = [
