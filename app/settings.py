@@ -1,15 +1,11 @@
-"""
-DONT WORK ON PROD CUZ IS_PROD IS NOT SET SOMEHOW XD 
-SAME WITH WEBSITE_HOSTNAME.
-VARIABLES ARE INVISBLE WHEN CHOOSING SETTINGS FILE(wsgi.py) FOR SOME REASON
-"""
-
 import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# DEBUG PURPOSE
+IS_PROD = os.environ.get("IS_PROD")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -24,11 +20,10 @@ ALLOWED_HOSTS = [
     "localhost",
     "*",
     "127.0.0.1",
-    "parking-spots.azurewebsites.net",  # TODO: At least make it work on prod...
+    "parking-spots.azurewebsites.net",
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://localhost:3001",
     "http://0.0.0.0:3001",
 ]
 
