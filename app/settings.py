@@ -24,11 +24,12 @@ ALLOWED_HOSTS = [
     "localhost",
     "*",
     "127.0.0.1",
-    "parking-spots.azurewebsites.net", #TODO: At least make it work on prod...
+    "parking-spots.azurewebsites.net",  # TODO: At least make it work on prod...
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:3001",
+    "http://0.0.0.0:3001",
 ]
 
 if "CODESPACE_NAME" in os.environ:
