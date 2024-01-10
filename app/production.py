@@ -11,13 +11,19 @@ ALLOWED_HOSTS = (
     [
         "parking-spots.azurewebsites.net",
         "e-parking.site",
+        # My local address Bra
+        "91.145.153.63",
     ]
     if os.environ.get("IS_PROD")
     else []
 )
 
 CSRF_TRUSTED_ORIGINS = (
-    ["https://parking-spots.azurewebsites.net", "http://e-parking.site",]
+    [
+        "https://parking-spots.azurewebsites.net",
+        "http://e-parking.site",
+        "http://91.145.153.63:3000",
+    ]
     if "WEBSITE_HOSTNAME" in os.environ
     else []
 )
