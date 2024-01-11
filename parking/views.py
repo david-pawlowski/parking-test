@@ -1,4 +1,11 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
+from django.views.generic import TemplateView
+
+from oauth2_provider.contrib.rest_framework import (
+    TokenHasReadWriteScope,
+    TokenHasScope,
+)
+
 from parking.models import (
     AvailabilityModel,
     ParkingModel,
@@ -15,14 +22,14 @@ from parking.tasks import send_email_task
 
 
 class ParkingViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
     queryset = ParkingModel.objects.all().order_by("-capacity")
     serializer_class = ParkingSerializer
-    permission_classess = []
 
 
 class ParkingSpotViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, TokenHasScope]
     serializer_class = ParkingSpotSerializer
-    permission_classess = []
 
     def get_queryset(self):
         parking_id = self.kwargs.get("parking_pk")
@@ -30,7 +37,8 @@ class ParkingSpotViewSet(viewsets.ModelViewSet):
         return (
             ParkingSpotModel.objects.filter(**filters)
             .prefetch_related("availability")
-            .all().order_by("id")
+            .all()
+            .order_by("id")
         )
 
 
@@ -61,6 +69,16 @@ class ReservationViewSet(viewsets.ModelViewSet):
 
 
 class AvailabilitySpotViewSet(viewsets.ModelViewSet):
-    queryset = AvailabilityModel.objects.select_related("parking_spot").all().order_by("-id")
+    queryset = (
+        AvailabilityModel.objects.select_related("parking_spot")
+        .all()
+        .order_by("-id")
+    )
     serializer_class = AvailabilitySerializer
     permission_classess = []
+
+
+class DocumentationView(TemplateView):
+    template_name = "swagger-ui.html"
+    extra_context = {"schema_url": "schema_url"}
+    permissions_classes = [permissions.AllowAny]

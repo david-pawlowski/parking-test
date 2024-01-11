@@ -13,3 +13,4 @@ celery
 Redis
 django-cors-headers
 drf-nested-routers
+django-oauth-toolkit
