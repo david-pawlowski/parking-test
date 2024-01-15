@@ -1,7 +1,6 @@
 import os
 
 from .settings import *  # noqa
-from .settings import BASE_DIR
 
 INSTALLED_APPS += [
     "whitenoise.runserver_nostatic",
@@ -12,7 +11,7 @@ ALLOWED_HOSTS = (
         "parking-spots.azurewebsites.net",
         "e-parking.site",
         # STatic web app
-        "https://nice-bay-0ac2b9603.4.azurestaticapps.net",
+        "https://ashy-wave-0653cd603.4.azurestaticapps.net",
     ]
     if os.environ.get("IS_PROD")
     else []
@@ -22,7 +21,7 @@ CSRF_TRUSTED_ORIGINS = (
     [
         "https://parking-spots.azurewebsites.net",
         "http://e-parking.site",
-        "https://nice-bay-0ac2b9603.4.azurestaticapps.net",
+        "https://ashy-wave-0653cd603.4.azurestaticapps.net",
     ]
     if "WEBSITE_HOSTNAME" in os.environ
     else []
